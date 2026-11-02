@@ -1,0 +1,439 @@
+/*
+  tracker.css
+  ---------------------------------------------------------------------------
+  Styles only for the full tracker page (tracker.html).
+  Shared colours come from styles.css.
+  ---------------------------------------------------------------------------
+*/
+
+body {
+  padding: 24px;
+}
+
+.tracker-header {
+  display: flex;
+  flex-wrap: wrap; /* let the buttons drop to a new line in narrow windows */
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tracker-header h1 {
+  font-size: 22px;
+}
+
+#count {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Table / Board switch: two buttons joined into one control. The button whose
+   aria-pressed is "true" (set by tracker.js) is highlighted. */
+.view-switch {
+  display: flex;
+  margin-left: 8px;
+}
+
+.view-switch button {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.view-switch button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.view-switch button:last-child {
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+}
+
+.view-switch button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* Export/Import buttons, pushed to the right end of the header. */
+.csv-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.csv-actions button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.csv-actions button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.csv-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* The "Imported 5 jobs" / error message. Hidden while empty. */
+#csv-message {
+  margin: -6px 0 12px;
+}
+
+#csv-message:empty {
+  display: none;
+}
+
+#csv-message.success {
+  color: var(--success);
+}
+
+#csv-message.error {
+  color: var(--danger);
+}
+
+#empty {
+  color: var(--muted);
+}
+
+/* If the table is wider than the window, scroll it sideways
+   instead of squashing the columns. */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* single lines between cells, not double */
+}
+
+th,
+td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface);
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Keep dates like "2026-10-24" on one line. */
+td:first-child {
+  white-space: nowrap;
+}
+
+/* Light highlight on the row under the mouse. */
+tbody tr:hover {
+  background: var(--surface);
+}
+
+/* Notes can be long: limit the width and keep line breaks the user typed. */
+td.notes {
+  max-width: 280px;
+  white-space: pre-wrap;
+}
+
+/* The editable Comments box in each row. It looks like plain text until you
+   hover or click it, so the table doesn't feel like a big form. */
+textarea.comments-input {
+  display: block;
+  width: 240px;
+  min-height: 2.6em;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  resize: vertical; /* drag the corner to make it taller */
+}
+
+textarea.comments-input:hover {
+  border-color: var(--border);
+}
+
+textarea.comments-input:focus {
+  border-color: var(--accent);
+  background: var(--bg);
+  outline: none;
+}
+
+/* "Follow up" tag on jobs waiting 10+ days at Applied. display: block puts it
+   on its own line under the date (table) or above the status (board). */
+.follow-up {
+  display: block;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #b7791f;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: help; /* hint that hovering shows more */
+}
+
+/* --- Status badges -------------------------------------------------------
+   The status dropdown in each row is styled as a coloured pill. Each status
+   gets its own colour: tracker.js adds a class such as
+   "badge status-interview" to the dropdown. */
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px; /* fully rounded "pill" shape */
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.badge:hover {
+  border-color: currentColor; /* outline takes the status colour on hover */
+}
+
+/* The options in the open list use normal text colours. */
+.badge option {
+  color: var(--text);
+  font-style: normal;
+}
+
+.status-saved     { color: var(--muted); }
+.status-applied   { color: var(--accent); }
+.status-interview { color: #b7791f; }
+.status-offer     { color: var(--success); }
+.status-rejected  { color: var(--danger); }
+.status-ghosted   { color: var(--muted); font-style: italic; }
+
+/* Edit and Delete side by side in the last table column. */
+td.actions {
+  white-space: nowrap;
+}
+
+td.actions .edit {
+  margin-right: 6px;
+}
+
+/* Small grey outline button for editing a job. */
+button.edit {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+button.edit:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Small red outline button for deleting a job. */
+button.delete {
+  padding: 3px 8px;
+  border: 1px solid var(--danger);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+button.delete:hover {
+  background: var(--danger);
+  color: var(--bg);
+}
+
+/* --- Board view ----------------------------------------------------------
+   One column per status, side by side. If they don't all fit, the board
+   scrolls sideways. */
+.board {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(200px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+/* The "hidden" attribute normally hides things, but "display: grid" above
+   would override it, so we restore it here. */
+.board[hidden] {
+  display: none;
+}
+
+.board-column {
+  min-height: 200px;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+/* Highlight the column a card is being dragged over. */
+.board-column.drop-target {
+  border-color: var(--accent);
+  border-style: dashed;
+}
+
+.board-column h2 {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 10px;
+  font-size: 13px;
+}
+
+/* The number of jobs in the column, e.g. "3". */
+.column-count {
+  color: var(--muted);
+  font-weight: 400;
+  font-style: normal;
+}
+
+.card {
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  cursor: grab; /* hand icon hints you can drag it */
+}
+
+/* The card being dragged fades so you can see where it came from. */
+.card.dragging {
+  opacity: 0.4;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Status dropdown on the left, Edit button on the right. */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+/* --- Search and filter -------------------------------------------------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.toolbar input,
+.toolbar select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.toolbar input {
+  width: 300px;
+  max-width: 100%;
+}
+
+.toolbar input:focus,
+.toolbar select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+#no-matches {
+  color: var(--muted);
+}
+
+/* A button that looks like a link ("Clear search"). */
+.link-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* --- Edit job window ------------------------------------------------------ */
+.edit-dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* The dimmed page behind the window. */
+.edit-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.edit-dialog h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+
+/* Small explanation under a field. */
+.field-note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Cancel and Save at the bottom right. */
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog-buttons .button-primary {
+  padding: 8px 16px;
+}
+
+.button-secondary {
+  margin-top: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}

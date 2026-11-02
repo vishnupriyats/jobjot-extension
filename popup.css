@@ -1,0 +1,58 @@
+/*
+  popup.css
+  ---------------------------------------------------------------------------
+  Styles only for the popup (popup.html). Shared colours come from styles.css.
+  ---------------------------------------------------------------------------
+*/
+
+/* Chrome sizes the popup to fit its content, so we set a fixed width.
+   (Chrome popups can be at most 800px wide and 600px tall.) */
+body {
+  width: 360px;
+  padding: 14px 16px 16px;
+}
+
+/* Title on the left, "View all jobs" link on the right. */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.popup-header a {
+  font-size: 13px;
+}
+
+/* Labels, inputs and the Save button are styled in styles.css (.job-form),
+   because the Edit dialog on the tracker page uses the same form. */
+
+/* The "Saved!" / error message under the button. */
+#message {
+  min-height: 1.4em; /* reserve space so the popup doesn't jump */
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+#message.success {
+  color: var(--success);
+}
+
+#message.error {
+  color: var(--danger);
+}
+
+/* "Already saved" warning above the form. */
+.duplicate {
+  margin-bottom: 6px;
+  padding: 8px 10px;
+  border: 1px solid #b7791f;
+  border-left-width: 4px;
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.duplicate p {
+  margin: 0 0 4px;
+}

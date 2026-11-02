@@ -1,0 +1,171 @@
+<!--
+  tracker.html
+  ---------------------------------------------------------------------------
+  A full-size page (opened in its own tab from the popup) that lists every
+  saved job in a table.
+
+  The table body starts empty; tracker.js reads the jobs from storage and
+  adds one row per job. As with the popup, all code lives in a separate .js
+  file because Manifest V3 doesn't allow inline JavaScript.
+  ---------------------------------------------------------------------------
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JobJot – All Jobs</title>
+  <!-- The small picture shown on the browser tab. -->
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="tracker.css">
+</head>
+<body>
+  <header class="tracker-header">
+    <h1>JobJot</h1>
+    <!-- tracker.js writes something like "12 jobs" here. -->
+    <p id="count"></p>
+
+    <!-- Table / Board switch (see tracker.js). -->
+    <div class="view-switch" role="group" aria-label="View">
+      <button type="button" data-view="table">Table</button>
+      <button type="button" data-view="board">Board</button>
+    </div>
+
+    <!-- CSV export/import (see csv.js and tracker.js). -->
+    <div class="csv-actions">
+      <button type="button" id="export-csv">Export CSV</button>
+      <button type="button" id="import-csv">Import CSV</button>
+      <!-- Hidden file picker; the Import button opens it. -->
+      <input type="file" id="import-file" accept=".csv,text/csv" hidden>
+    </div>
+  </header>
+
+  <!-- "Imported 5 jobs" or an error message appears here. -->
+  <p id="csv-message" role="status"></p>
+
+  <main>
+    <!-- Search box and status filter (see tracker.js). Hidden until there's
+         at least one job. -->
+    <div class="toolbar" id="toolbar" hidden>
+      <input type="search" id="search" placeholder="Search title, company, notes…"
+             aria-label="Search jobs">
+      <!-- tracker.js adds one <option> per status after these two. -->
+      <select id="status-filter" aria-label="Filter by status">
+        <option value="">All statuses</option>
+        <option value="follow-up">Needs follow-up</option>
+      </select>
+    </div>
+
+    <!-- Shown when there are jobs, but none match the search/filter. -->
+    <p id="no-matches" hidden>
+      No jobs match your search.
+      <button type="button" id="clear-filters" class="link-button">Clear search</button>
+    </p>
+
+    <!-- Shown instead of the table when there are no jobs yet. -->
+    <p id="empty" hidden>
+      No jobs saved yet. Click the JobJot icon in your toolbar to add one,
+      or import a CSV file.
+    </p>
+
+    <!-- The wrapper lets the table scroll sideways on narrow windows. -->
+    <div class="table-wrap" id="table-wrap" hidden>
+      <table id="jobs-table">
+        <thead>
+          <tr>
+            <th>Date applied</th>
+            <th>Job title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Salary</th>
+            <th>Contact</th>
+            <th>Notes</th>
+            <th>Comments</th>
+            <th><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <!-- Rows are added here by tracker.js. -->
+        <tbody id="jobs-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Board view: tracker.js adds one column per status here. -->
+    <div class="board" id="board" hidden></div>
+  </main>
+
+  <!--
+    "Edit job" window, opened by the Edit button on a row or card.
+    <dialog> is a built-in pop-up: tracker.js opens it with showModal(), which
+    dims the page behind it, and the Esc key closes it.
+    Same fields as the popup's form, with the same "name"s, plus Comments.
+  -->
+  <dialog id="edit-dialog" class="edit-dialog" aria-labelledby="edit-heading">
+    <form id="edit-form" class="job-form">
+      <h2 id="edit-heading">Edit job</h2>
+
+      <label for="edit-title">Job title *</label>
+      <input id="edit-title" name="title" type="text" required>
+
+      <label for="edit-company">Company *</label>
+      <input id="edit-company" name="company" type="text" required>
+
+      <label for="edit-url">Job URL</label>
+      <input id="edit-url" name="url" type="url" placeholder="https://...">
+
+      <div class="row">
+        <div>
+          <label for="edit-location">Location</label>
+          <input id="edit-location" name="location" type="text">
+        </div>
+        <div>
+          <label for="edit-dateApplied">Date applied</label>
+          <input id="edit-dateApplied" name="dateApplied" type="date">
+        </div>
+      </div>
+      <!-- Explains a date imported in another format, e.g. "10/24/2026". -->
+      <p id="edit-date-note" class="field-note" hidden></p>
+
+      <div class="row">
+        <div>
+          <label for="edit-status">Status</label>
+          <!-- Options added by tracker.js from STATUSES. -->
+          <select id="edit-status" name="status"></select>
+        </div>
+        <div>
+          <label for="edit-source">Source</label>
+          <input id="edit-source" name="source" type="text">
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="edit-salary">Salary</label>
+          <input id="edit-salary" name="salary" type="text">
+        </div>
+        <div>
+          <label for="edit-contact">Contact</label>
+          <input id="edit-contact" name="contact" type="text">
+        </div>
+      </div>
+
+      <label for="edit-notes">Notes</label>
+      <textarea id="edit-notes" name="notes" rows="3"></textarea>
+
+      <label for="edit-comments">Comments</label>
+      <textarea id="edit-comments" name="comments" rows="3"></textarea>
+
+      <div class="dialog-buttons">
+        <button type="button" id="edit-cancel" class="button-secondary">Cancel</button>
+        <button type="submit" class="button-primary">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="storage.js"></script>
+  <script src="csv.js"></script>
+  <script src="tracker.js"></script>
+</body>
+</html>

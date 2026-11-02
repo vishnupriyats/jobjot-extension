@@ -1,0 +1,134 @@
+/*
+  styles.css
+  ---------------------------------------------------------------------------
+  Styles shared by BOTH pages (popup.html and tracker.html).
+
+  Colours are stored as "CSS variables" (the --names below) so they can be
+  changed in one place. The @media block swaps them for darker colours when
+  your computer is set to dark mode.
+  ---------------------------------------------------------------------------
+*/
+:root {
+  --bg: #ffffff;
+  --surface: #f5f6f8;   /* slightly grey background for inputs, table header */
+  --text: #1d2330;
+  --muted: #5f6b7a;     /* secondary text */
+  --border: #d5dae1;
+  --accent: #2f6fde;    /* buttons and links */
+  --accent-text: #ffffff;
+  --success: #1c7c45;
+  --danger: #c0392b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17191d;
+    --surface: #22252b;
+    --text: #e7e9ee;
+    --muted: #9aa3b0;
+    --border: #383d46;
+    --accent: #6f9cf0;
+    --accent-text: #0e1420;
+    --success: #5cc98b;
+    --danger: #f07a6e;
+  }
+}
+
+/* Make width/height include padding and border — easier to reason about. */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  /* Use the operating system's normal font. */
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Hides text visually but keeps it readable by screen readers. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- Job form ----------------------------------------------------------------
+   The "save a job" form in the popup and the "Edit job" dialog on the tracker
+   page share these styles, so both look the same. */
+
+/* Stack labels and inputs vertically. */
+.job-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-form label {
+  display: block;
+  margin: 8px 0 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* All text boxes, the dropdown and the notes box look the same. */
+.job-form input,
+.job-form select,
+.job-form textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+/* Blue outline on the field you're typing in. */
+.job-form input:focus,
+.job-form select:focus,
+.job-form textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.job-form textarea {
+  resize: vertical; /* user can drag to make it taller, not wider */
+}
+
+/* Two equal columns, used for the side-by-side fields. */
+.job-form .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* The main blue button: "Save job", "Save changes". */
+.button-primary {
+  margin-top: 14px;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button-primary:hover {
+  filter: brightness(1.08);
+}

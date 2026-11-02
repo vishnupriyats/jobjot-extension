@@ -1,0 +1,107 @@
+<!--
+  popup.html
+  ---------------------------------------------------------------------------
+  This is the small window that opens when you click the extension's icon in
+  the Chrome toolbar (manifest.json points to it with "default_popup").
+
+  It contains a form for saving one job application.
+
+  Important Chrome extension rule: Manifest V3 does NOT allow JavaScript
+  written directly inside HTML (no <script>...code...</script> and no
+  onclick="..."). All code must live in separate .js files, loaded with
+  <script src="...">. That's why this file has no code in it.
+  ---------------------------------------------------------------------------
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JobJot</title>
+  <!-- Shared colours/fonts first, then popup-only styles. -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="popup-header">
+    <h1>JobJot</h1>
+    <!-- Clicking this opens tracker.html in a new tab (see popup.js). -->
+    <a href="tracker.html" id="open-tracker">View all jobs →</a>
+  </header>
+
+  <!--
+    The form. Each field has:
+      - a <label> whose "for" matches the input's "id" (clicking the label
+        focuses the input, and screen readers read the label aloud)
+      - a "name", which popup.js uses to collect the values
+    "required" makes the browser refuse to submit if the field is empty.
+  -->
+  <!--
+    Warning shown when this job looks like one you've already saved (same
+    address, or same title and company). popup.js fills in the text.
+  -->
+  <div id="duplicate" class="duplicate" role="alert" hidden>
+    <p id="duplicate-text"></p>
+    <a href="tracker.html" id="duplicate-link">View in tracker →</a>
+  </div>
+
+  <form id="job-form" class="job-form">
+    <label for="title">Job title *</label>
+    <input id="title" name="title" type="text" required>
+
+    <label for="company">Company *</label>
+    <input id="company" name="company" type="text" required>
+
+    <label for="url">Job URL</label>
+    <input id="url" name="url" type="url" placeholder="https://...">
+
+    <!-- Two fields side by side to keep the popup short. -->
+    <div class="row">
+      <div>
+        <label for="location">Location</label>
+        <input id="location" name="location" type="text" placeholder="Remote, City...">
+      </div>
+      <div>
+        <label for="dateApplied">Date applied</label>
+        <!-- popup.js fills this with today's date when the popup opens. -->
+        <input id="dateApplied" name="dateApplied" type="date">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="status">Status</label>
+        <!-- The <option>s are added by popup.js from the STATUSES list. -->
+        <select id="status" name="status"></select>
+      </div>
+      <div>
+        <label for="source">Source</label>
+        <input id="source" name="source" type="text" placeholder="LinkedIn, referral...">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="salary">Salary</label>
+        <input id="salary" name="salary" type="text" placeholder="e.g. $90k–110k">
+      </div>
+      <div>
+        <label for="contact">Contact</label>
+        <input id="contact" name="contact" type="text" placeholder="Name / email">
+      </div>
+    </div>
+
+    <label for="notes">Notes</label>
+    <textarea id="notes" name="notes" rows="3"></textarea>
+
+    <button type="submit" id="save-button" class="button-primary">Save job</button>
+
+    <!-- Short "Saved!" or error message appears here. -->
+    <p id="message" role="status"></p>
+  </form>
+
+  <!-- Load storage.js FIRST because popup.js uses its functions. -->
+  <script src="storage.js"></script>
+  <script src="extract.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.DS_Store
+
+# Personal data: exported job applications
+*.csv
+
+# Local notes, not part of the extension
+job tracker chat history/
+
+# Python cache from tools/
+__pycache__/
+
+# Release zips
+*.zip
